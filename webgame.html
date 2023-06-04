@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tower Stacking Game</title>
+    <style>
+        /* CSS 스타일 지정 */
+        #game-area {
+            width: 400px;
+            height: 600px;
+            border: 1px solid black;
+            margin: 0 auto;
+            position: relative;
+        }
+        .block {
+            width: 50px;
+            height: 20px;
+            background-color: blue;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease; /* 블록의 이동에 애니메이션 효과 추가 */
+        }
+        .small-block {
+            width: 100%;
+            height: 10px;
+            background-color: red;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-area">
+        <div class="block"></div>
+        <div class="small-block"></div>
+    </div>
+
+    <script>
+        // 자이로센서 이벤트 핸들러
+        function handleOrientation(event) {
+            var gamma = event.gamma; // 디바이스의 회전 각도
+            var gameArea = document.getElementById('game-area');
+            var block = document.querySelector('.block');
+            var smallBlock = document.querySelector('.small-block');
+
+            // 디바이스 회전 각도에 따라 블록 이동
+            block.style.left = (gameArea.offsetWidth / 2) + (gamma * 5) + 'px';
+
+            // 블록이 바닥에 닿았을 때 게임 종료
+            if (block.offsetTop + block.offsetHeight >= gameArea.offsetHeight) {
+                gameEnd();
+            }
+
+            // 작은 블록 위에 블록 쌓기
+            if (block.offsetTop + block.offsetHeight >= smallBlock.offsetTop) {
+                var newBlock = document.createElement('div');
+                newBlock.className = 'block';
+                gameArea.appendChild(newBlock);
+            }
+        }
+
+        // 게임 종료 함수
+        function gameEnd() {
+            // 게임 오버 메시지 출력
+            var gameArea = document.getElementById('game-area');
+            var gameOverMessage = document.createElement('div');
+            gameOverMessage.textContent = 'Game Over';
+            gameOverMessage.style.position = 'absolute';
+            gameOverMessage.style.top = '50%';
+            gameOverMessage.style.left = '50%';
+            gameOverMessage.style.transform = 'translate(-50%, -50%)';
+            gameOverMessage.style.fontSize = '24px';
+            gameOverMessage.style.color = 'red';
+            gameArea.appendChild(gameOverMessage);
+
+            // 자이로센서 이벤트 리스너 제거
+            window.removeEventListener('deviceorientation', handleOrientation);
+        }
+
+        // 게임 시작 함수
+        function startGame() {
+            var gameArea = document.getElementById('game-area');
+            var smallBlock }
